@@ -1,0 +1,919 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<header class="dahej-header">
+    <div class="dahej-overlay">
+        <div class="dahej-container">
+            <h1 class="dahej-title shimmer">
+                <span class="icon">💍</span> Calculate My Dahej <span class="icon">💰</span>
+            </h1>
+            <p class="dahej-tagline glow">
+                Discover your dowry worth with our premium calculator tool
+            </p>
+            <div class="sparkles">
+                <div class="sparkle"></div>
+                <div class="sparkle"></div>
+                <div class="sparkle"></div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+<div class="calculator-container">
+    <div class="calculator-header">
+        <h1 class="calculator-title">Indian Dowry Calculator</h1>
+        <p class="calculator-subtitle">Estimate marriage considerations based on Indian parameters</p>
+    </div>
+
+   
+    
+    <form id="dowry-form" class="modern-form">
+        <div class="input-group">
+            <div class="form-group">
+                <label for="salary">Monthly Salary (₹)</label>
+                <div class="input-with-icon">
+                    <span class="currency-icon">₹</span>
+                    <input type="text" id="salary" name="salary" placeholder="e.g. 75,000" required>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="profession">Profession</label>
+                <select id="profession" name="profession" class="modern-select">
+                    <option value="1">Unemployed</option>
+                    <option value="2">Private Sector</option>
+                    <option value="3">Government Job</option>
+                    <option value="4">Doctor/Engineer</option>
+                    <option value="5">IAS/IPS/IRS</option>
+                    <option value="6">Business Owner</option>
+                    <option value="7">NRI Professional</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="input-group">
+            <div class="form-group">
+                <label for="assets">Family Assets (₹)</label>
+                <div class="input-with-icon">
+                    <span class="currency-icon">₹</span>
+                    <input type="text" id="assets" name="assets" placeholder="e.g. 50,00,000" required>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="education-expense">Education Expenses (₹)</label>
+                <div class="input-with-icon">
+                    <span class="currency-icon">₹</span>
+                    <input type="text" id="education-expense" name="education-expense" placeholder="e.g. 10,00,000">
+                </div>
+            </div>
+        </div>
+        
+        <div class="input-group">
+            <div class="form-group">
+                <label for="education">Education Level</label>
+                <div class="range-container">
+                    <input type="range" id="education" name="education" min="1" max="10" value="5" class="slider">
+                    <div class="range-marks">
+                        <span>10th Pass</span>
+                        <span>Graduate</span>
+                        <span>Post Grad</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="social-status">Family Status</label>
+                <div class="range-container">
+                    <input type="range" id="social-status" name="social-status" min="1" max="10" value="5" class="slider">
+                    <div class="range-marks">
+                        <span>Middle Class</span>
+                        <span>Upper Middle</span>
+                        <span>Elite</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="input-group">
+            <div class="form-group">
+                <label for="marital-status">Marital Status</label>
+                <select id="marital-status" name="marital-status" class="modern-select">
+                    <option value="1">Never Married</option>
+                    <option value="2">Divorced</option>
+                    <option value="3">Widow/Widower</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="location">Residence</label>
+                <select id="location" name="location" class="modern-select">
+                    <option value="1">India - Rural</option>
+                    <option value="2">India - Urban</option>
+                    <option value="3">Outside India (NRI)</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="checkbox-group">
+            <label>Additional Factors:</label>
+            <div class="checkboxes">
+                <label>
+                    <input type="checkbox" name="car" id="car"> Owns Car
+                </label>
+                <label>
+                    <input type="checkbox" name="property" id="property"> Owns Property
+                </label>
+                <label>
+                    <input type="checkbox" name="foreign-degree" id="foreign-degree"> Foreign Degree
+                </label>
+            </div>
+        </div>
+        
+        <button type="submit" id="calculate-btn" class="modern-button">
+            <span>Calculate Marriage Considerations</span>
+            <i class="fas fa-rupee-sign"></i>
+        </button>
+    </form>
+    
+    <div id="result" class="result-card hidden">
+        <div class="result-content">
+            <div class="result-icon">
+                <i class="fas fa-gem"></i>
+            </div>
+            <div class="result-text">
+                <h3>Estimated Marriage Considerations</h3>
+                <p class="result-amount">₹0</p>
+                <p class="result-description">Based on current social parameters</p>
+            </div>
+        </div>
+        <div class="result-breakdown">
+            <div class="breakdown-item">
+                <span>Base Value</span>
+                <span class="breakdown-amount" id="base-value">₹0</span>
+            </div>
+            <div class="breakdown-item">
+                <span>Education Factor</span>
+                <span class="breakdown-amount" id="education-bonus">₹0</span>
+            </div>
+            <div class="breakdown-item">
+                <span>Status Premium</span>
+                <span class="breakdown-amount" id="status-premium">₹0</span>
+            </div>
+            <div class="breakdown-item total">
+                <span>Total Consideration</span>
+                <span class="breakdown-amount" id="total-amount">₹0</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="legal-disclaimer">
+        <h4>Important Legal Notice</h4>
+        <p>The Dowry Prohibition Act, 1961 prohibits the giving or taking of dowry in India. This calculator is for educational purposes only to understand social trends and should not be used for actual dowry negotiations. Any form of dowry is illegal and punishable by law.</p>
+    </div>
+</div>
+
+
+
+<div class="modern-footer">
+    <div class="footer-content">
+        <!-- Owner Profile -->
+        <div class="footer-section about-us">
+            <div class="owner-profile">
+                <img src="{{ url_for('static', filename='images/Naitik.jpg') }}" alt="Naitik Kushwaha" class="owner-image">
+                <div class="owner-info">
+                    <h4>About Me</h4>
+                    <p>Hi, I'm <strong>Naitik Kushwaha</strong>, the creator of this tool. I built this to raise awareness about dowry-related issues.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- About Tool Section -->
+        <div class="footer-section">
+            <h4>About This Tool</h4>
+            <p>Provides insights into marriage considerations in India. Simulated results, not legally binding.</p>
+        </div>
+
+        <!-- Contact Owner Section - Corrected with your details -->
+        <div class="footer-section">
+            <h4>Contact Owner</h4>
+            <ul class="social-links">
+                <li><a href="mailto:naitikk682@gmail.com"><i class="fas fa-envelope"></i> naitikk682@gmail.com</a></li>
+                <li><a href="tel:+918948866980"><i class="fas fa-phone"></i> +91 89488 66980</a></li>
+                <li><a href="https://www.instagram.com/mr_naitik_maurya?igsh=MTk2ZGRpdHZkdnNtcA==" target="_blank"><i class="fab fa-instagram"></i> @mr_naitik_maurya</a></li>
+                <li><a href="https://www.linkedin.com/in/naitik-kushwaha-a7688a320?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" target="_blank"><i class="fab fa-linkedin"></i> Naitik Kushwaha</a></li>
+                <li><a href="https://www.facebook.com/share/1DZR8ANc1z/" target="_blank"><i class="fab fa-facebook"></i> Facebook Profile</a></li>
+            </ul>
+        </div>
+
+        <!-- Legal Information Section -->
+        <div class="footer-section">
+            <h4>Legal Information</h4>
+            <ul class="legal-links">
+                <li>Dowry Prohibition Act 1991</li>
+                <li>Ministry of Women & Child Development</li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="footer-bottom">
+        © Indian Marriage Considerations Calculator | No endorsement of dowry
+    </div>
+</div>
+
+<!-- Font Awesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+
+<style>
+
+.dahej-header {
+    background: 
+      radial-gradient(circle at 20% 50%, #ff4e50, #f9d423),
+      linear-gradient(to right, #ff4e50, #f9d423);
+    color: white;
+    text-align: center;
+    padding: 4rem 1rem;
+    position: relative;
+    overflow: hidden;
+    border-bottom: 5px solid #d32f2f;
+  }
+
+  .dahej-header::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: linear-gradient(90deg, 
+      transparent, 
+      rgba(255,255,255,0.8), 
+      transparent);
+    animation: shine 3s infinite;
+  }
+
+  .dahej-content {
+    max-width: 800px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .dahej-title {
+    font-size: 3.2rem;
+    margin: 0;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-shadow: 
+      3px 3px 0 rgba(0,0,0,0.2),
+      6px 6px 0 rgba(0,0,0,0.1);
+    position: relative;
+    display: inline-block;
+  }
+
+  .dahej-title::after {
+    content: "";
+    position: absolute;
+    bottom: -10px;
+    left: 25%;
+    width: 50%;
+    height: 3px;
+    background: white;
+    border-radius: 3px;
+    box-shadow: 0 0 10px white;
+  }
+
+  .icon {
+    display: inline-block;
+    animation: float 3s ease-in-out infinite;
+  }
+
+  .icon:first-child {
+    animation-delay: 0.3s;
+    margin-right: 15px;
+  }
+
+  .icon:last-child {
+    animation-delay: 0.6s;
+    margin-left: 15px;
+  }
+
+  .dahej-tagline {
+    font-size: 1.5rem;
+    margin: 1.5rem 0 0;
+    font-weight: 300;
+    position: relative;
+    display: inline-block;
+    padding: 0 20px;
+  }
+
+  .dahej-tagline::before,
+  .dahej-tagline::after {
+    content: "✦";
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0.8;
+  }
+
+  .dahej-tagline::before {
+    left: -10px;
+  }
+
+  .dahej-tagline::after {
+    right: -10px;
+  }
+
+  .dahej-ornament {
+    position: absolute;
+    bottom: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60%;
+    height: 30px;
+    background: 
+      repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 10px,
+        white 10px,
+        white 20px
+      );
+    clip-path: polygon(0 0, 100% 0, 90% 100%, 10% 100%);
+  }
+
+  @keyframes shine {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+  }
+
+:root {
+    --primary-color: #6a4ac8;
+    --primary-light: #8a63e6;
+    --secondary-color: #ff6b6b;
+    --text-color: #333;
+    --light-text: #666;
+    --border-color: #e0e0e0;
+    --background-light: #f9f9f9;
+    --success-color: #4caf50;
+    --footer-bg: #2c3e50;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    color: var(--text-color);
+    background-color: #f5f7fa;
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+
+
+.calculator-container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2.5rem;
+    background: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+    flex: 1;
+}
+
+.calculator-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
+
+.calculator-title {
+    color: var(--primary-color);
+    font-size: 2.2rem;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+}
+
+.calculator-subtitle {
+    color: var(--light-text);
+    font-size: 1rem;
+    max-width: 80%;
+    margin: 0 auto;
+}
+
+.modern-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.8rem;
+}
+
+.input-group {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.input-group > * {
+    flex: 1;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.form-group label {
+    font-weight: 600;
+    color: var(--text-color);
+    font-size: 0.95rem;
+}
+
+.input-with-icon {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.currency-icon {
+    position: absolute;
+    left: 14px;
+    color: var(--light-text);
+    font-weight: bold;
+}
+
+input[type="text"], 
+input[type="number"],
+.modern-select {
+    padding: 14px 16px 14px 38px;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    font-size: 1rem;
+    width: 100%;
+    transition: all 0.3s ease;
+    background: var(--background-light);
+    color: var(--text-color);
+}
+
+input[type="text"]:focus, 
+input[type="number"]:focus,
+.modern-select:focus {
+    outline: none;
+    border-color: var(--primary-light);
+    box-shadow: 0 0 0 3px rgba(138, 99, 230, 0.2);
+    background: #fff;
+}
+
+.modern-select {
+    padding-left: 16px;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1em;
+}
+
+.range-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.slider {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 8px;
+    border-radius: 4px;
+    background: #e0e0e0;
+    outline: none;
+    margin-top: 0.5rem;
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 3px solid white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.slider::-webkit-slider-thumb:hover {
+    transform: scale(1.1);
+    background: var(--primary-light);
+}
+
+.range-marks {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    color: var(--light-text);
+    margin-top: 0.3rem;
+}
+
+.checkbox-group {
+    margin-top: 1rem;
+}
+
+.checkboxes {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.checkboxes label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.checkboxes input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--primary-color);
+    cursor: pointer;
+}
+
+.modern-button {
+    padding: 16px 24px;
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.05rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+    margin-top: 1rem;
+    box-shadow: 0 4px 15px rgba(106, 74, 200, 0.3);
+}
+
+.modern-button:hover {
+    background: linear-gradient(135deg, #5a3ab8, #7a53d6);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(106, 74, 200, 0.4);
+}
+
+.modern-button:active {
+    transform: translateY(0);
+}
+
+.result-card {
+    margin-top: 2.5rem;
+    background: linear-gradient(135deg, #f8f4ff, #f0e8ff);
+    border-radius: 16px;
+    padding: 2rem;
+    border-left: 6px solid var(--primary-color);
+    transition: all 0.4s ease;
+}
+
+.result-card.hidden {
+    display: none;
+}
+
+.result-content {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.result-icon {
+    width: 60px;
+    height: 60px;
+    background: var(--primary-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.8rem;
+}
+
+.result-text h3 {
+    margin: 0;
+    color: var(--light-text);
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.result-amount {
+    margin: 0.5rem 0 0.2rem;
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.result-description {
+    color: var(--light-text);
+    font-size: 0.9rem;
+}
+
+.result-breakdown {
+    border-top: 1px dashed var(--border-color);
+    padding-top: 1.5rem;
+}
+
+.breakdown-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.8rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid #eee;
+}
+
+.breakdown-item:last-child {
+    margin-bottom: 0;
+    border-bottom: none;
+}
+
+.breakdown-item.total {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 2px solid var(--primary-light);
+}
+
+.breakdown-amount {
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.legal-disclaimer {
+    margin-top: 2.5rem;
+    padding: 1.5rem;
+    background-color: #fff8f8;
+    border-radius: 10px;
+    border-left: 4px solid var(--secondary-color);
+}
+
+.legal-disclaimer h4 {
+    color: var(--secondary-color);
+    margin-bottom: 0.8rem;
+}
+
+.legal-disclaimer p {
+    font-size: 0.85rem;
+    line-height: 1.6;
+    color: #666;
+}
+
+
+   /* Footer Styling */
+.modern-footer {
+    background: linear-gradient(135deg, #1e1e2f, #25253d);
+    color: #ffffff;
+    padding: 40px 0;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Footer Content Layout */
+.footer-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    max-width: 1200px;
+    margin: auto;
+    padding: 0 20px;
+}
+
+/* Sections */
+.footer-section {
+    padding: 10px;
+}
+.footer-section h4 {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    color: #ffcc00;
+}
+.footer-section p {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: #d4d4d4;
+}
+
+/* Owner Profile */
+.owner-profile {
+    display: flex;
+    align-items: center;
+    gap: 60px;
+}
+.owner-image {
+    width: 120px;
+    height: 120px;
+    border-radius: 100%;
+    border: 1px solid #ffcc00;
+    transition: transform 0.3s ease;
+}
+.owner-image:hover {
+    transform: scale(1.9);
+}
+.owner-info {
+    max-width: 200px;
+}
+
+/* Contact Links */
+.social-links {
+    list-style: none;
+    padding: 0;
+}
+.social-links li {
+    margin: 8px 0;
+}
+.social-links a {
+    text-decoration: none;
+    color: #ffffff;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: color 0.3s ease;
+}
+.social-links a:hover {
+    color: #ffcc00;
+}
+.social-links i {
+    font-size: 1.2rem;
+}
+
+/* Footer Bottom */
+.footer-bottom {
+    text-align: center;
+    margin-top: 20px;
+    padding: 10px;
+    font-size: 0.9rem;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+</style>
+
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('dowry-form');
+    const resultCard = document.getElementById('result');
+    const resultAmount = document.querySelector('.result-amount');
+    const baseValue = document.getElementById('base-value');
+    const educationBonus = document.getElementById('education-bonus');
+    const statusPremium = document.getElementById('status-premium');
+    const totalAmount = document.getElementById('total-amount');
+
+    // Profession multipliers
+    const professionMultipliers = {
+        1: 0.8,   // Unemployed
+        2: 1.0,   // Private Sector
+        3: 1.5,   // Government Job
+        4: 1.8,   // Doctor/Engineer
+        5: 2.5,   // IAS/IPS/IRS
+        6: 2.0,   // Business Owner
+        7: 3.0    // NRI Professional
+    };
+
+    // Location multipliers
+    const locationMultipliers = {
+        1: 0.8,   // Rural
+        2: 1.2,   // Urban
+        3: 2.0    // NRI
+    };
+
+    // Marital status multipliers
+    const maritalMultipliers = {
+        1: 1.0,   // Never Married
+        2: 0.7,   // Divorced
+        3: 0.6    // Widow/Widower
+    };
+
+    // Format Indian numbers with commas
+    function formatIndianNumber(e) {
+    const input = e.target;
+    let value = input.value.replace(/[^0-9]/g, ''); // Remove all non-numeric chars
+    
+    if (value === '') {
+        input.value = '';
+        return;
+    }
+    
+    // Format with commas
+    input.value = Number(value).toLocaleString('en-IN');
+}
+
+function parseIndianNumber(formattedNumber) {
+    const num = Number(formattedNumber.replace(/[^0-9]/g, ''));
+    return isNaN(num) ? 0 : num;
+}
+
+    // Add event listeners for number formatting
+    document.getElementById('salary').addEventListener('input', formatIndianNumber);
+    document.getElementById('assets').addEventListener('input', formatIndianNumber);
+    document.getElementById('education-expense').addEventListener('input', formatIndianNumber);
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        // Get and parse input values
+        const salary = parseIndianNumber(document.getElementById('salary').value);
+        const profession = parseInt(document.getElementById('profession').value);
+        const assets = parseIndianNumber(document.getElementById('assets').value);
+        const educationExpense = parseIndianNumber(document.getElementById('education-expense').value);
+        const education = parseInt(document.getElementById('education').value);
+        const socialStatus = parseInt(document.getElementById('social-status').value);
+        const maritalStatus = parseInt(document.getElementById('marital-status').value);
+        const location = parseInt(document.getElementById('location').value);
+        const ownsCar = document.getElementById('car').checked;
+        const ownsProperty = document.getElementById('property').checked;
+        const hasForeignDegree = document.getElementById('foreign-degree').checked;
+        
+        // Validate inputs
+        if (salary <= 0 || assets < 0) {
+            alert('Please enter valid salary and assets values');
+            return;
+        }
+        
+        // Show loading state
+        const submitBtn = document.getElementById('calculate-btn');
+        submitBtn.innerHTML = '<span>Calculating...</span><i class="fas fa-spinner fa-spin"></i>';
+        submitBtn.disabled = true;
+        
+        // Simulate API call with timeout
+        setTimeout(() => {
+            // Calculate base components
+            const baseDowry = salary * 12 * 3; // 3 years salary as base
+            const assetsContribution = assets * 0.2; // 20% of total assets
+            const educationInvestment = educationExpense * 0.5; // 50% of education expenses
+            
+            // Apply multipliers
+            const professionFactor = professionMultipliers[profession] || 1.0;
+            const locationFactor = locationMultipliers[location] || 1.0;
+            const maritalFactor = maritalMultipliers[maritalStatus] || 1.0;
+            
+            // Education multiplier (1.0 to 2.0 scale)
+            const educationMultiplier = 1 + (education / 10);
+            
+            // Social status multiplier (1.0 to 2.0 scale)
+            const socialMultiplier = 1 + (socialStatus / 10);
+            
+            // Additional factors
+            const carBonus = ownsCar ? baseDowry * 0.15 : 0;
+            const propertyBonus = ownsProperty ? baseDowry * 0.25 : 0;
+            const foreignDegreeBonus = hasForeignDegree ? baseDowry * 0.2 : 0;
+            
+            // Calculate components for breakdown
+            const baseValueAmount = (baseDowry + assetsContribution + educationInvestment) * professionFactor * maritalFactor;
+            const educationBonusAmount = (baseValueAmount * (educationMultiplier - 1)) + foreignDegreeBonus;
+            const statusPremiumAmount = (baseValueAmount * (socialMultiplier - 1)) + carBonus + propertyBonus;
+            
+            // Final calculation with location factor
+            const totalConsideration = (baseValueAmount + educationBonusAmount + statusPremiumAmount) * locationFactor;
+            
+            // Format as Indian Rupees
+            const formatter = new Intl.NumberFormat('en-IN', {
+                style: 'currency',
+                currency: 'INR',
+                maximumFractionDigits: 0
+            });
+            
+            // Update UI
+            resultAmount.textContent = formatter.format(totalConsideration);
+            baseValue.textContent = formatter.format(baseValueAmount);
+            educationBonus.textContent = `+${formatter.format(educationBonusAmount)}`;
+            statusPremium.textContent = `+${formatter.format(statusPremiumAmount)}`;
+            totalAmount.textContent = formatter.format(totalConsideration);
+            
+            // Show result
+            resultCard.classList.remove('hidden');
+            
+            // Reset button
+            submitBtn.innerHTML = '<span>Calculate Marriage Considerations</span><i class="fas fa-rupee-sign"></i>';
+            submitBtn.disabled = false;
+            
+            // Smooth scroll to result
+            resultCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }, 800); // Simulate network delay
+    });
+});
+</script>
+{% endblock %}
